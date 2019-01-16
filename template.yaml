@@ -11,7 +11,7 @@ spec:
       labels:
         app: postgres
     spec:
-      init-container:
+      initContainers:
       - image: akubrachenko/init-container:${gitTag}
         name: postgresql
         env:
