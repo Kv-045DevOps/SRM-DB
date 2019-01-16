@@ -1,6 +1,6 @@
 node {
-    def db-service
-    def init-container
+    def db_service
+    def init_container
 
     // Checking, that the repository was cloned to workspace
     stage('Clone repository') {
@@ -13,7 +13,7 @@ node {
     // Build docker image for db-service
     stage('Build db-service image') {
 
-        db-service = docker.build("akubrachenko/db-service:test")
+        db_service = docker.build("akubrachenko/db-service:test")
 
     }
 
@@ -21,21 +21,21 @@ node {
     stage('Build image') {
 
        // sh 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/'
-       init-container = docker.build("init-container/Dockerfile","akubrachenko/init-container:test", "init-container/")
+       init_container = docker.build("init-container/Dockerfile","akubrachenko/init-container:test", "init-container/")
 
     }
 
     // Push image db-service to the docker hub
     stage('Push image') {
         docker.withRegistry('', 'docker_pass') {
-            db-service.push()
+            db_service.push()
         }
     }
 
     // Push image init container to the docker hub
     stage('Push image') {
         docker.withRegistry('', 'docker_pass') {
-            init-container.push()
+            init_container.push()
         }
     }
 
