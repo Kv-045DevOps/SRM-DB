@@ -3,17 +3,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   namespace: production
-  name: postgres
+  name: db-service
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: postgres
+        app: db-service
     spec:
       initContainers:
-      - image: akubrachenko/init-container:${gitTag}
-        name: postgresql
+      - image: akubrachenko/init-container:test
+        name: init-container-postgres
         env:
         - name: PGDATABASE
           valueFrom:
@@ -30,9 +30,9 @@ spec:
             secretKeyRef:
               name: db-secret
               key: password
-        command: ['sh', '-c', 'until pg_isready -h srmsystemdb -p 5432; do echo waiting for database; sleep 2; /tmp/check_dump.sh;']
+        command: ['sh', '-c', 'until pg_isready -h srmsystemdb -p 5432; do echo waiting for database; sleep 2; done;']
       containers:
-      - image: akubrachenko/db-service:${gitTag}
+      - image: akubrachenko/db-service:test
         name: db-service
         ports:
         - containerPort: 5000
