@@ -8,6 +8,22 @@ node {
         gitTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
 
     }
+    // Build docker image
+    stage('Build image') {
 
-    //Push to claster
+        sh 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/'
+
+    }
+    // Check dump file and script
+    stage('Test image') {
+        app.inside {
+            sh 'dir /tmp'
+        }
+    }
+    // Push image to the docker hub
+    stage('Push image') {
+        docker.withRegistry('', 'docker_pass') {
+            app.push()
+        }
+    }
 }

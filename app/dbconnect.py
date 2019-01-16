@@ -1,12 +1,13 @@
 import psycopg2
-from app import config
+import os
 
 
 def connect_db(dbname):
-    if dbname != config.DATABASE_CONFIG['dbname']:
+    if dbname != str(os.getenv("PGDATABASE")):
         raise ValueError("Couldn't not find DB with given name")
-    conn = psycopg2.connect(host=config.DATABASE_CONFIG['host'],
-                           user=config.DATABASE_CONFIG['user'],
-                           password=config.DATABASE_CONFIG['password'],
-                           dbname=config.DATABASE_CONFIG['dbname'])
+    conn = psycopg2.connect(host=str(os.getenv("POSTGRES_HOST")),
+                           port=str(os.getenv("POSTGRES_PORT")), 
+                           user=str(os.getenv("PGUSER")),
+                           password=str(os.getenv("PGPASSWORD")),
+                           dbname=str(os.getenv("PGDATABASE")))
     return conn
