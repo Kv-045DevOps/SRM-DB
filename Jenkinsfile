@@ -20,9 +20,8 @@ node {
     // Build docker image for init container
     stage('Build init-container image') {
 
-        sh 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/'
-        //init_container = docker.build("akubrachenko/init-container:test","--build-arg init-container/Dockerfile init-container/")
-        init_container = 'akubrachenko/init-container:test'
+        //sh 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/'
+        init_container = docker.build("-f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/")
     }
 
     // Push image db-service to the docker hub
