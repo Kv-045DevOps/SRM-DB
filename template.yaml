@@ -30,7 +30,7 @@ spec:
             secretKeyRef:
               name: db-secret
               key: password
-        command: ['sh', '-c', 'until pg_isready -h srmsystemdb -p 5432; do echo waiting for database; sleep 2; done;']
+        command: ['sh', '-c', '/tmp/check_dump.sh']
       containers:
       - image: akubrachenko/db-service:test
         name: db-service
@@ -63,6 +63,8 @@ metadata:
   namespace: production
   name: db-service
 spec:
+  selector:
+    app: db-service
   ports:
   - protocol: TCP
     port: 5000
