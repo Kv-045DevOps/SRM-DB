@@ -30,7 +30,7 @@ spec:
             secretKeyRef:
               name: db-secret
               key: password
-        command: ['sh', '-c', '/tmp/check_dump.sh']
+        command: ['sh', '-c', 'until pg_isready -h srmsystemd -p 5432; do echo waiting for database; sleep 2; done;']
       containers:
       - image: akubrachenko/db-service:test
         name: db-service
