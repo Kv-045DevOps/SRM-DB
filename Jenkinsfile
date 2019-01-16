@@ -21,7 +21,7 @@ node {
     stage('Build init-container image') {
 
         //sh 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/'
-        init_container = docker.build("-f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/")
+        init_container = docker.build("-f init-container/Dockerfile -t akubrachenko/init-container:test init-container/")
     }
 
     // Push image db-service to the docker hub
