@@ -20,8 +20,8 @@ node {
     // Build docker image for init container
     stage('Build init-container image') {
 
-        init_container = sh (script: 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/', returnStdout: true)
-       //init_container = docker.build("init-container/Dockerfile","akubrachenko/init-container:test", "init-container/")
+        //init_container = sh (script: 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/', returnStdout: true)
+        init_container = docker.build("akubrachenko/init-container:test","--build-arg akubrachenko/init-container:test init-container/")
 
     }
 
