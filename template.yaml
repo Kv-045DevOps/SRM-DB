@@ -5,7 +5,6 @@ metadata:
   namespace: production
   name: db-service
 spec:
-  replicas: 1
   template:
     metadata:
       labels:
@@ -30,7 +29,7 @@ spec:
             secretKeyRef:
               name: db-secret
               key: password
-        command: ['sh', '-c', 'until pg_isready -h srmsystemd -p 5432; do echo waiting for database; sleep 2; done;']
+        command: ['sh', '-c', '/bin/sh /tmp/check_dump.sh']
       containers:
       - image: akubrachenko/db-service:test
         name: db-service
