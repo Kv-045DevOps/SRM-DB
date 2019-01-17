@@ -29,7 +29,7 @@ spec:
             secretKeyRef:
               name: db-secret
               key: password
-        command: ['sh', '-c', '/bin/sh /tmp/check_dump.sh']
+        command: ['sh', '-c', '/bin/bash /tmp/check_dump.sh']
       containers:
       - image: akubrachenko/db-service:test
         name: db-service
