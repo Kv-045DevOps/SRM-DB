@@ -34,7 +34,7 @@ spec:
       - image: akubrachenko/db-service:test
         name: db-service
         ports:
-        - containerPort: 5000
+        - containerPort: 5002
         env:
         - name: POSTGRES_HOST
           value: srmsystemdb
@@ -66,5 +66,5 @@ spec:
     app: db-service
   ports:
   - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    port: 5002
+    targetPort: 5002
