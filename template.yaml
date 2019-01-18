@@ -11,7 +11,7 @@ spec:
         app: db-service
     spec:
       initContainers:
-      - image: akubrachenko/init-container:test
+      - image: 100.71.71.71:5000/init-container:latest
         name: init-container-postgres
         env:
         - name: PGDATABASE
@@ -31,7 +31,7 @@ spec:
               key: password
         command: ['sh', '-c', '/bin/bash /tmp/check_dump.sh']
       containers:
-      - image: akubrachenko/db-service:test
+      - image: 100.71.71.71:5000/db-service:latest
         name: db-service
         ports:
         - containerPort: 5002
