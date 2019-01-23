@@ -49,8 +49,7 @@ podTemplate(label: label, containers: [
 ],
 volumes: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
-]
-) 
+], serviceAccount: "jenkins") 
 {
 def app
 def dockerRegistry = "100.71.71.71:5000"
@@ -81,15 +80,14 @@ node(label)
         stage("Test code using PyLint and version build"){
 			container('python-alpine'){
 				pathTocode = pwd()
-				sh "python3 ${pathTocode}/sed-python.py template.yml ${dockerRegistry}/db-service ${imageTag}"
-                sh "python3 ${pathTocode}/sed-python.py template.yml ${dockerRegistry}/init-container ${imageTag}"
+				sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/db-service ${imageTag}"
+                sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/init-container ${imageTag}"
 				sh "python3 ${pathTocode}/pylint-test.py ${pathTocode}/app/routes.py"
 			}
         }
         stage("Build docker images"){
 			container('docker'){
 				pathdocker = pwd()
-//            app = docker.build("${imageName}:${imageTag}")
 				sh "docker build ${pathdocker} -t ${imageN}${imageTag}"
                 sh "docker build ${pathdocker}/init-container/ -t ${dockerRegistry}/init-container:${imageTag}"
 				sh "docker images"
