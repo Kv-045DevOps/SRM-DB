@@ -65,7 +65,7 @@ node(label)
     try{
         stage("Git Checkout"){
             git(
-                branch: "akubrachenko",
+                branch: "test",
                 url: 'https://github.com/Kv-045DevOps/SRM-DB.git',
                 credentialsId: "${Creds}")
             sh "git rev-parse --short HEAD > .git/commit-id"
