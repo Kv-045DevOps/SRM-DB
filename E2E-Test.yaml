@@ -1,0 +1,95 @@
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+ name:  db-secret
+ namespace: testing
+data:
+  username:  ZGJhZG1pbg==
+  password:  UGFzc3dvcmQ=
+  dbname: c3Jtc3lzdGVt
+type: Opaque
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: testing
+  labels:
+    app: pvc-postgres
+  name: postgres-pvc
+spec:
+  #storageClassName: slow
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: testing
+  name: postgres
+  labels:
+    service: postgresdb
+spec:
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      initContainers:
+      - name: volume-mount-hack
+        image: busybox
+        command: ["sh", "-c", "chown -R 999:999 /var/lib/postgresql/"]
+        volumeMounts:
+        - name: postgres-pv-claim
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+      containers:
+      - image: postgres:9.6.2
+        name: postgresql
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: dbname
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-pv-claim
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+      volumes:
+      - name: postgres-pv-claim
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: testing
+  name: srmsystemdb
+spec:
+  selector:
+    app: postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+---
