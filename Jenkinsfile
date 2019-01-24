@@ -104,8 +104,13 @@ node(label)
         //     pathTocode = pwd()
         //     sh "python3 ${pathTocode}/images-registry-test.py ${dockerRegistry} ${projName} ${imageTag}"
         // }
+	
         stage("Deploy to Kubernetes"){
+		        withcredentials(
+				[usernamePassword(credentialsId: 'DbCred', usernameVariable: 'DB_USERNAME' passwordVariable: 'DB_PASSWORD')]
+				[stringCredentials(credentialsId: 'DbName', secretVariable: 'DB_NAME',)])
 			container('kubectl'){
+			        sh "kubectl create secret generic db-secret --from-literal=username=$DB_USERNAME --from-literal=password=$DB_PASSWORD --from-literal=dbname=$DB_NAME -n production"
 				sh "kubectl apply -f template.yaml"
 				sh "kubectl get pods --namespace=production"
 			}
