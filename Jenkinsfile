@@ -52,6 +52,7 @@ volumes: [
 ], serviceAccount: "jenkins") 
 {
 def app
+def imageTag
 def dockerRegistry = "100.71.71.71:5000"
 def Creds = "git_cred"
 def projName = "db-service"
@@ -68,11 +69,11 @@ node(label)
                 branch: "test",
                 url: 'https://github.com/Kv-045DevOps/SRM-DB.git',
                 credentialsId: "${Creds}")
-            sh "git rev-parse --short HEAD > .git/commit-id"
-            imageTag= readFile ".git/commit-id"
+            //sh "git rev-parse --short HEAD > .git/commit-id"
+            imageTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
         }
         stage("Info"){
-            sh "echo ${imageTag}"
+            sh "echo $imageTag"
         }
         stage ("Unit Tests"){
             sh 'echo "Here will be unit tests"'
@@ -83,6 +84,7 @@ node(label)
 				sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/db-service ${imageTag}"
                 sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/init-container ${imageTag}"
 				sh "python3 ${pathTocode}/pylint-test.py ${pathTocode}/app/routes.py"
+				sh 'cat template.yaml'
 			}
         }
         stage("Build docker images"){
@@ -107,6 +109,19 @@ node(label)
 				sh "kubectl apply -f template.yaml"
 				sh "kubectl get pods --namespace=production"
 			}
+        }
+          stage ("E2E Tests - Stage 1"){
+            container('python-alpine'){
+            sh 'echo "Here are e2e tests"'
+	    sh "python3 sed_python_test.py template-test.yaml ${imageTag}"
+	    sh 'cat template-test.yaml'
+          }
+        }
+	stage ("E2E Tests - Stage 2"){
+            container('kubectl'){
+       sh 'kubectl apply -f template-test.yaml'
+	   sh 'kubectl get pods -n testing'
+          }
         }
 	stage ("Unit Tests"){
             sh 'echo "Here will be e2e tests"'
