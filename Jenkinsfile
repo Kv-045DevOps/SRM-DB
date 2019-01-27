@@ -1,45 +1,3 @@
-// node {
-//     def db_service
-//     def init_container
-
-//     // Checking, that the repository was cloned to workspace
-//     stage('Clone repository') {
-        
-//         checkout scm
-//         gitTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
-
-//     }
-
-//     // Build docker image for db-service
-//     stage('Build db-service image') {
-
-//         db_service = docker.build("akubrachenko/db-service:test")
-
-//     }
-
-//     // Build docker image for init container
-//     stage('Build init-container image') {
-
-//         //sh 'docker build -f init-container/Dockerfile -t  akubrachenko/init-container:test init-container/'
-//         init_container = docker.build("akubrachenko/init-container:test", "-f init-container/Dockerfile init-container/")
-//     }
-
-//     // Push image db-service to the docker hub
-//     stage('Push db-service image') {
-//         docker.withRegistry('', 'docker_pass') {
-//             db_service.push()
-//         }
-//     }
-
-//     // Push image init container to the docker hub
-//     stage('Push init-conatainer image') {
-//         docker.withRegistry('', 'docker_pass') {
-//             init_container.push()
-//         }
-//     }
-
-//     //Push to claster
-// }
 def label = "mypod-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [
@@ -93,39 +51,10 @@ node(label)
 				sh "docker build ${pathdocker} -t ${imageN}${imageTag}"
                 sh "docker build ${pathdocker}/init-container/ -t ${dockerRegistry}/init-container:${imageTag}"
 				sh "docker images"
-	//withCredentials([usernamePassword(credentialsId: 'docker_registry_2', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
 				    
 				sh "docker push ${imageN}${imageTag}"
                 sh "docker push ${dockerRegistry}/init-container:${imageTag}"
-        //}
 			}
-        }
-	
-        stage("Deploy to Kubernetes"){
-		        withcredentials(
-				[usernamePassword(credentialsId: 'DbCred', usernameVariable: 'DB_USERNAME', passwordVariable: 'DB_PASSWORD')]
-				[stringCredentials(credentialsId: 'DbName', secretVariable: 'DB_NAME',)])
-			container('kubectl'){
-			        sh "kubectl create secret generic db-secret --from-literal=username=$DB_USERNAME --from-literal=password=$DB_PASSWORD --from-literal=dbname=$DB_NAME -n production"
-				sh "kubectl apply -f template.yaml"
-				sh "kubectl get pods --namespace=production"
-			}
-        }
-          stage ("E2E Tests - Stage 1"){
-            container('python-alpine'){
-            sh 'echo "Here are e2e tests"'
-	    sh "python3 sed_python_test.py template-test.yaml ${imageTag}"
-	    sh 'cat template-test.yaml'
-          }
-        }
-	stage ("E2E Tests - Stage 2"){
-            container('kubectl'){
-       sh 'kubectl apply -f template-test.yaml'
-	   sh 'kubectl get pods -n testing'
-          }
-        }
-	stage ("Unit Tests"){
-            sh 'echo "Here will be e2e tests"'
         }
     }
     catch(err){
