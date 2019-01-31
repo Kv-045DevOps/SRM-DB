@@ -52,7 +52,7 @@ node(label)
                 sh "docker build ${pathdocker}/init-container/ -t ${dockerRegistry}/init-container:${params.imageTag}"
 				sh "docker images"
 				    
-				sh "docker push ${imageN}${imageTag}"
+				sh "docker push ${imageN}${params.imageTag}"
                 sh "docker push ${dockerRegistry}/init-container:${params.imageTag}"
 			}
         }
