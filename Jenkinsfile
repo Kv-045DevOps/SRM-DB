@@ -31,7 +31,7 @@ node(label)
             imageTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
         }
         stage("Info"){
-            sh "echo $imageTag"
+            sh "echo ${params.imageTag}"
         }
         stage ("Unit Tests"){
             sh 'echo "Here will be unit tests"'
@@ -39,8 +39,8 @@ node(label)
         stage("Test code using PyLint and version build"){
 			container('python-alpine'){
 				pathTocode = pwd()
-				sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/db-service ${imageTag}"
-                sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/init-container ${imageTag}"
+				sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/db-service ${params.imageTag}"
+                sh "python3 ${pathTocode}/sed_python.py template.yaml ${dockerRegistry}/init-container ${params.imageTag}"
 				sh "python3 ${pathTocode}/pylint-test.py ${pathTocode}/app/routes.py"
 				sh 'cat template.yaml'
 			}
@@ -48,12 +48,12 @@ node(label)
         stage("Build docker images"){
 			container('docker'){
 				pathdocker = pwd()
-				sh "docker build ${pathdocker} -t ${imageN}${imageTag}"
-                sh "docker build ${pathdocker}/init-container/ -t ${dockerRegistry}/init-container:${imageTag}"
+				sh "docker build ${pathdocker} -t ${imageN}${params.imageTag}"
+                sh "docker build ${pathdocker}/init-container/ -t ${dockerRegistry}/init-container:${params.imageTag}"
 				sh "docker images"
 				    
 				sh "docker push ${imageN}${imageTag}"
-                sh "docker push ${dockerRegistry}/init-container:${imageTag}"
+                sh "docker push ${dockerRegistry}/init-container:${params.imageTag}"
 			}
         }
     }
