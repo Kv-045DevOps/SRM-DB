@@ -71,8 +71,11 @@ node(label)
 			container('docker'){
 				pathdocker = pwd()
                                 if ("${tmp}" == "${check_new}"){
+					container("python-alpine"){
 					sh "python3 ${pathTocodedb}/sed_python.py template.yaml ${dockerRegistry}/db-service ${imageTagDB}"
                 			sh "python3 ${pathTocodedb}/sed_python.py template.yaml ${dockerRegistry}/init-container ${imageTagDB}"
+					}
+					container("docker"){
 					sh 'cat template.yaml'
 					sh "docker images"
                                 	sh "cat /etc/docker/daemon.json"
@@ -83,6 +86,7 @@ node(label)
 				    
 					sh "docker push ${imageN}${imageTagDB}"
                 			sh "docker push ${dockerRegistry}/init-container:${imageTagDB}"
+					}
 					build(job: 'test_e2e', parameters: [[$class: 'StringParameterValue', name:"imageTagDB", value: "${imageTagDB}"]], wait: true)
         			} else {
             				echo "NO"
