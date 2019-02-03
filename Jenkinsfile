@@ -53,7 +53,7 @@ node(label)
         }
         stage("Test image_regisrty_check"){
             container("python-alpine"){
-                check_new = (sh (script: "python3 ${pathTocodeget}/images-registry-test.py db-service ${imageTagDB}", returnStdout:true).trim())
+                check_new = (sh (script: "python3 ${pathTocodedb}/images-registry-test.py db-service ${imageTagDB}", returnStdout:true).trim())
                 echo "${check_new}"
             }
         }
