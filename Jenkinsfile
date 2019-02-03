@@ -72,11 +72,11 @@ node(label)
 				pathdocker = pwd()
                                 if ("${tmp}" == "${check_new}"){
 					container("python-alpine"){
-					sh "python3 ${pathTocodedb}/sed_python.py template.yaml ${dockerRegistry}/db-service ${imageTagDB}"
-                			sh "python3 ${pathTocodedb}/sed_python.py template.yaml ${dockerRegistry}/init-container ${imageTagDB}"
+					sh "python3 ${pathTocodedb}/sed_python.py ${pathTocodedb}/template.yaml ${dockerRegistry}/db-service ${imageTagDB}"
+                			sh "python3 ${pathTocodedb}/sed_python.py ${pathTocodedb}/template.yaml ${dockerRegistry}/init-container ${imageTagDB}"
 					}
 					container("docker"){
-					sh 'cat template.yaml'
+					sh 'cat ${pathTocodedb}/template.yaml'
 					sh "docker images"
                                 	sh "cat /etc/docker/daemon.json"
 
