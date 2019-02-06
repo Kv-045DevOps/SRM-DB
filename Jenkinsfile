@@ -51,7 +51,7 @@ node(label)
             git(branch: "test", url: 'https://github.com/Kv-045DevOps/SRM-DB.git', credentialsId: "${Creds}")
             imageTagDB = (sh (script: "git rev-parse --short HEAD", returnStdout: true))
             tmp = "1"
-	    pathoTocodedb = pwd()
+	    pathTocodedb = pwd()
             }
         }
         stage("Test image_regisrty_check"){
