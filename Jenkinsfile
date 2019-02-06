@@ -88,7 +88,7 @@ node(label)
 					build(job: 'test_e2e', parameters: [[$class: 'StringParameterValue', name:"imageTagDB_", value: "${imageTagDB}"],
 									   [$class: 'StringParameterValue', name:"imageTagUI_", value: "${params.imageTagUI_}"],
 									   [$class: 'StringParameterValue', name:"imageTagGET_", value: "${params.imageTagGET_}"],
-									   [$class: 'StringParameterValue', name:"service", value: "db"]]], wait: true)
+									   [$class: 'StringParameterValue', name:"service", value: "db"]], wait: true)
         			} else {
             				echo "NO"
         			}
