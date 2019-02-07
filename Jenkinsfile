@@ -84,6 +84,7 @@ node(label)
 				    
 					sh "docker push ${imageN}${imageTagDB}"
                 			sh "docker push ${dockerRegistry}/init-container:${imageTagDB}"
+					sleep 20
 					}
 					build(job: 'test_e2e', parameters: [[$class: 'StringParameterValue', name:"imageTagDB_", value: "${imageTagDB}"],
 									   [$class: 'StringParameterValue', name:"imageTagUI_", value: "${params.imageTagUI_}"],
