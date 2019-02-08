@@ -21,7 +21,7 @@ properties([
     parameters([
         stringParam(
             defaultValue: "***", 
-            description: '', 
+            description: 'C', 
             name: 'imageTagGET_'),
 	stringParam(
             defaultValue: "***", 
