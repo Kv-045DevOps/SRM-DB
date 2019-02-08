@@ -1,17 +1,20 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: production
   name: db-service
 spec:
+  selector:
+    matchLabels:
+      app: db-service
   template:
     metadata:
       labels:
         app: db-service
     spec:
       initContainers:
-      - image: 100.71.71.71:5000/init-container:latest
+      - image: 100.71.71.71:5000/init-container:${params.imageTagDB_}
         name: init-container-postgres
         env:
         - name: PGDATABASE
@@ -31,7 +34,7 @@ spec:
               key: password
         command: ['sh', '-c', '/bin/bash /tmp/check_dump.sh']
       containers:
-      - image: 100.71.71.71:5000/db-service:latest
+      - image: 100.71.71.71:5000/db-service:${params.imageTagDB_}
         name: db-service
         ports:
         - containerPort: 5002
@@ -39,7 +42,7 @@ spec:
         - name: POSTGRES_HOST
           value: srmsystemdb
         - name: POSTGRES_PORT
-          value: "5432"
+          value: '5432'
         - name: PGDATABASE
           valueFrom:
             secretKeyRef:
@@ -68,3 +71,4 @@ spec:
   - protocol: TCP
     port: 5002
     targetPort: 5002
+---
