@@ -2,7 +2,7 @@ def label = "mypod-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'python-alpine', image: 'ghostgoose33/python-alp:v2', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'python-alpine', image: 'ghostgoose33/python-alp:v3', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'ghostgoose33/docker-in:v1', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
@@ -19,22 +19,6 @@ def imageN = '100.71.71.71:5000/db-service:'
 
 properties([
     parameters([
-        stringParam(
-            defaultValue: "***", 
-            description: 'C', 
-            name: 'imageTagGET_'),
-	stringParam(
-            defaultValue: "***", 
-            description: '', 
-            name: 'imageTagUI_'),
-	stringParam(
-            defaultValue: "***", 
-            description: '', 
-            name: 'imageTagDB_'),
-        stringParam(
-            defaultValue: '***', 
-            description: 'Name', 
-            name: 'namespace'),
 	stringParam(
             defaultValue: '', 
             description: 'TAG', 
