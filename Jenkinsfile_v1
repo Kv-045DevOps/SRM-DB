@@ -22,7 +22,7 @@ def imageN = '100.71.71.71:5000/db-service:'
 node(label)
 {
     try{
-        stage("Git Checkout"){
+        stage("Git Check"){
             git(
                 branch: "test",
                 url: 'https://github.com/Kv-045DevOps/SRM-DB.git',
