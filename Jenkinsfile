@@ -1,7 +1,7 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 
 
-podTemplate(label: label, containers: [
+podTemplate(label: label, annotations: [podAnnotation(key: "sidecar.istio.io/inject", value: "false")], containers: [
   containerTemplate(name: 'python-alpine', image: 'ghostgoose33/python-alp:v3', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'ghostgoose33/docker-in:v1', command: 'cat', ttyEnabled: true)
 ],
