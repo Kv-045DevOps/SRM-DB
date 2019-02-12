@@ -70,7 +70,7 @@ node(label)
                 			sh "docker push ${dockerRegistry}/init-container:${imageTagDB}"
 					sleep 20
 					}
-					build(job: 'test_e2e', parameters: [[$class: 'StringParameterValue', name:"imageTagDB_", value: "${imageTagDB}"],
+					build(job: 'GitHub/GET-SERVICES/test1', parameters: [[$class: 'StringParameterValue', name:"imageTagDB_", value: "${imageTagDB}"],
 									   [$class: 'StringParameterValue', name:"imageTagUI_", value: "${params.imageTagUI_}"],
 									   [$class: 'StringParameterValue', name:"imageTagGET_", value: "${params.imageTagGET_}"],
 									   [$class: 'StringParameterValue', name:"service", value: "db"]], wait: true)
