@@ -20,7 +20,7 @@ def imageN = '100.71.71.71:5000/db-service:'
 properties([
     parameters([
 	stringParam(
-            defaultValue: '***', 
+            defaultValue: '', 
             description: 'TAG', 
             name: 'service')
     ])
